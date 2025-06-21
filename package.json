@@ -1,0 +1,17 @@
+{
+  "name": "n8n-neo4j-proxy",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+ 	 "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "neo4j-driver": "^5.28.1"
+  }
+}
