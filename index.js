@@ -11,7 +11,7 @@ const driver = neo4j.driver(
 );
 
 app.post('/query', async (req, res) => {
-  const session = driver.session();
+  const session = driver.session({ database: 'neo4j' });
   const { cypher, params } = req.body;
   try {
     const result = await session.run(cypher, params || {});
