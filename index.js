@@ -1,8 +1,7 @@
-// index.js
 const express = require('express');
 const bodyParser = require('body-parser');
-const neo4j = require('neo4j-driver');
 const cors = require('cors');
+const neo4j = require('neo4j-driver');
 
 const app = express();
 app.use(cors());
@@ -15,21 +14,27 @@ const driver = neo4j.driver(
 
 app.post('/query', async (req, res) => {
   const { cypher, params } = req.body;
-  const session = driver.session({ database: 'neo4j' }); // AURA 必須指定資料庫名稱
+
+  if (!cypher) {
+    return res.status(400).json({ success: false, error: 'Missing cypher query' });
+  }
+
+  const session = driver.session({ database: 'neo4j' });
+
   try {
     const result = await session.run(cypher, params || {});
-    const records = result.records.map(record => record.toObject());
+    const records = result.records.map((record) => record.toObject());
     res.json({ success: true, data: records });
-  } catch (error) {
-    console.error('Neo4j 錯誤：', error);
-    res.status(500).json({ success: false, error: error.message });
+  } catch (err) {
+    console.error('Neo4j Error:', err);
+    res.status(500).json({ success: false, error: err.message });
   } finally {
     await session.close();
   }
 });
 
 app.get('/', (req, res) => {
-  res.send('Neo4j proxy is running.');
+  res.send('✅ Neo4j proxy is running.');
 });
 
 const PORT = process.env.PORT || 3000;
